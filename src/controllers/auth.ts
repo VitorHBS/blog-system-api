@@ -1,6 +1,7 @@
 import type { RequestHandler } from "express";
 import { z } from "zod";
 import { createUser } from "../services/user";
+import { createToken } from "../services/auth";
 
 export const signup: RequestHandler = async (req, res) => {
 
@@ -22,7 +23,7 @@ export const signup: RequestHandler = async (req, res) => {
         return res.json({ error: "Erro ao criar Usuário" });
     }
 
-    const token = "123"
+    const token = createToken(newUser)
 
     res.status(201).json({
         user: {
