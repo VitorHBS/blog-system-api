@@ -1,12 +1,10 @@
 import type { RequestHandler } from "express";
-import { email, z } from "zod";
+import { z } from "zod";
 import { createUser, verifyUser } from "../services/user";
 import { createToken } from "../services/auth";
 import { LoginSchema, RegisterSchema } from "../schemas/user";
 
 export const signup: RequestHandler = async (req, res) => {
-
-
 
     const safeData = RegisterSchema.safeParse(req.body);
 
@@ -28,7 +26,7 @@ export const signup: RequestHandler = async (req, res) => {
             name: newUser.name,
             email: newUser.email
         },
-        token: token
+        token
     })
 }
 

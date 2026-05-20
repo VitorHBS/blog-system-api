@@ -2,6 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../libs/prisma";
 import type { LoginData } from "../schemas/user";
 import { email } from "zod";
+import { tr } from "zod/v4/locales/index.js";
 
 type CreateUserPros = {
     name: string,
@@ -32,7 +33,19 @@ export const verifyUser = async (data: LoginData) => {
     })
 
     if (!user) return null;
-    if (!bcrypt.compare(data.password, user.password)) return null;
+    if (!(await bcrypt.compare(data.password, user.password))) return null;
 
     return user;
+}
+
+export const getUserById = async(id: number) => {
+    return prisma.user.findUnique({
+        where: {id},
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            status: true
+        }
+    })
 }
