@@ -1,9 +1,11 @@
 import { Router } from "express";
 import * as adminController from "../controllers/admin";
+import { privateRoute } from "../middlewares/private-route";
+import { upload } from "../libs/multer";
 
 export const admRouters = Router();
 
-//admRouters.post("/posts", adminController.addPost);
+admRouters.post("/posts", privateRoute, upload.single("cover"),  adminController.addPost);
 //admRouters.get("/posts", adminController.getPosts);
 //admRouters.get("/posts/:slug", adminController.getPost);
 //admRouters.put("/posts/:slug", adminController.editPost);

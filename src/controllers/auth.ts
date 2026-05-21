@@ -1,8 +1,9 @@
-import type { RequestHandler } from "express";
+import type { RequestHandler, Response } from "express";
 import { z } from "zod";
 import { createUser, verifyUser } from "../services/user";
 import { createToken } from "../services/auth";
 import { LoginSchema, RegisterSchema } from "../schemas/user";
+import type { ExtendedRequest } from "../types/extended-request";
 
 export const signup: RequestHandler = async (req, res) => {
 
@@ -55,4 +56,8 @@ export const signin: RequestHandler = async (req, res) => {
         },
         token
     })
+}
+
+export const validate = async (req: ExtendedRequest, res: Response) => {
+    return res.json({user: req.user});
 }
