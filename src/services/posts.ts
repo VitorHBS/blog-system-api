@@ -2,6 +2,22 @@ import { v4 } from "uuid";
 import fs from "fs/promises";
 import slug from "slug";
 import { prisma } from "../libs/prisma";
+import type { CreatePostData } from "../schemas/post";
+
+
+
+export const getPostBySlug = async (slug: string) => {
+    return prisma.post.findUnique({
+        where: { slug },
+        include: {
+            author: {
+                select: {
+                    name: true
+                }
+            }
+        }
+    })
+}
 
 
 export const handleCover = async (file: Express.Multer.File) => {
@@ -31,7 +47,7 @@ export const createPostSlug = async (title: string) => {
     let postCount = 1;
 
     while (keepTrying) {
-        const post = getPostBySlug(newSlug)
+        const post = await getPostBySlug(newSlug)
 
         if (!post) {
             keepTrying = false;
@@ -42,15 +58,6 @@ export const createPostSlug = async (title: string) => {
     return newSlug
 }
 
-export const getPostBySlug = async (slug: string) => {
-    return prisma.post.findUnique({
-        where: { slug },
-        include: {
-            author: {
-                select: {
-                    name: true
-                }
-            }
-        }
-    })
+export const createPost = async (data: CreatePostData) => {
+    return await prisma.post.create({ data })
 }
