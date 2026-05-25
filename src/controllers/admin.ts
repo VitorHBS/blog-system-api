@@ -2,10 +2,37 @@ import type { RequestHandler, Response } from "express";
 import type { ExtendedRequest } from "../types/extended-request";
 import { z } from "zod";
 import { EditPost, PostSchema } from "../schemas/post";
-import { createPost, createPostSlug, getPostBySlug, handleCover, updatePost } from "../services/posts";
+import { createPost, createPostSlug, getAllPosts, getPostBySlug, handleCover, updatePost } from "../services/posts";
 import { getUserById } from "../services/user";
 import { coverToUrl } from "../utils/cover-to-url";
 import { removePost } from "../services/auth";
+
+
+export const getPosts = async (req: ExtendedRequest, res: Response) => {
+    let page = 1;
+
+    if (req.query.page) {
+        page = parseInt(req.query.page as string);
+        if (page <= 0) {
+            return res.json({ error: "Página inexistente" })
+        }
+    }
+
+    let posts = await getAllPosts(page);
+
+    const postsToReturn = posts.map(posts => ({
+        id: posts.id,
+        status: posts.status,
+        title: posts.title,
+        createdAt: posts.createdAt,
+        cover: coverToUrl(posts.cover),
+        authorName: posts.author?.name,
+        tags: posts.tags,
+        slug: posts.slug
+    }));
+
+    res.json({ posts: postsToReturn, page })
+}
 
 export const addPost = async (req: ExtendedRequest, res: Response) => {
 
