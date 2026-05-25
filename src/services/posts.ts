@@ -3,6 +3,7 @@ import fs from "fs/promises";
 import slug from "slug";
 import { prisma } from "../libs/prisma";
 import type { CreatePostData } from "../schemas/post";
+import type { Prisma } from "@prisma/client";
 
 
 
@@ -60,4 +61,11 @@ export const createPostSlug = async (title: string) => {
 
 export const createPost = async (data: CreatePostData) => {
     return await prisma.post.create({ data })
+}
+
+export const updatePost = async (slug: string, data: Prisma.PostUpdateInput) => {
+    return await prisma.post.update({
+        where: { slug },
+        data
+    })
 }

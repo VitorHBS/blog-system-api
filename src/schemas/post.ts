@@ -19,3 +19,13 @@ export const CreatePostSchema = z.object({
 })
 
 export type CreatePostData = z.infer<typeof CreatePostSchema>
+
+
+export const EditPost = z.object({
+    status: z.enum(["PUBLISHED", "DRAFT"]).optional(),
+    title: z.string().optional(),
+    tags: z.string().optional(),
+    body: z.string().optional()
+})
+
+export type EditData = z.infer<typeof EditPost>

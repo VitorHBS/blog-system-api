@@ -8,5 +8,5 @@ export const admRouters = Router();
 admRouters.post("/posts", privateRoute, upload.single("cover"),  adminController.addPost);
 //admRouters.get("/posts", adminController.getPosts);
 //admRouters.get("/posts/:slug", adminController.getPost);
-//admRouters.put("/posts/:slug", adminController.editPost);
+admRouters.put("/posts/:slug", privateRoute, upload.single("cover"), adminController.editPost);
 //admRouters.delete("/posts/:slug", adminController.deletePost);
