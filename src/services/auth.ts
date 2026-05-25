@@ -3,6 +3,7 @@ import { createJWT, readJWT } from "../libs/jwt";
 import type { Request } from "express";
 import type { TokenPayload } from "../types/token-payload";
 import { getUserById } from "./user";
+import { prisma } from "../libs/prisma";
 
 
 export const createToken = (user: User) => {
@@ -25,4 +26,8 @@ export const verifyRequest = async (req: Request) => {
     }
 
     return false
+}
+
+export const removePost = async (slug: string) => {
+    return await prisma.post.delete({ where: { slug } })
 }

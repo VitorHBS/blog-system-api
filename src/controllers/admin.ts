@@ -5,6 +5,7 @@ import { EditPost, PostSchema } from "../schemas/post";
 import { createPost, createPostSlug, getPostBySlug, handleCover, updatePost } from "../services/posts";
 import { getUserById } from "../services/user";
 import { coverToUrl } from "../utils/cover-to-url";
+import { removePost } from "../services/auth";
 
 export const addPost = async (req: ExtendedRequest, res: Response) => {
 
@@ -95,4 +96,17 @@ export const editPost = async (req: ExtendedRequest, res: Response) => {
             authorName: author?.name
         }
     });
+}
+
+export const deletePost = async (req: ExtendedRequest, res: Response) => {
+    const { slug } = req.params;
+
+    if (typeof slug !== "string") return res.json({ error: "tipo do dado inválido" })
+
+    const post = await getPostBySlug(slug)
+
+    if (!post) return res.json({ error: "Post inexistente" });
+
+    await removePost(post.slug)
+    res.json({ error: null })
 }
