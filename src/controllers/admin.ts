@@ -34,6 +34,29 @@ export const getPosts = async (req: ExtendedRequest, res: Response) => {
     res.json({ posts: postsToReturn, page })
 }
 
+export const getPost = async (req: ExtendedRequest, res: Response) => {
+    const { slug } = req.params;
+
+    if (typeof slug !== "string") return res.status(400).json({ error: "type slug invalid" })
+
+    const post = await getPostBySlug(slug);
+
+    if (!post) return res.status(404).json({ error: "post inexistente" });
+
+    res.json({
+        post: {
+            id: post.id,
+            title: post.title,
+            createdAt: post.createdAt,
+            cover: coverToUrl(post.cover),
+            authorName: post.author?.name,
+            body: post.body,
+            tags: post.tags,
+            slug: post.slug
+        }
+    })
+}
+
 export const addPost = async (req: ExtendedRequest, res: Response) => {
 
     if (!req.user) return res.status(401).json({ error: "Erro de login" });
