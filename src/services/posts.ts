@@ -5,6 +5,31 @@ import { prisma } from "../libs/prisma";
 import type { CreatePostData } from "../schemas/post";
 import type { Prisma } from "@prisma/client";
 
+export const getAllPublishedPosts = async (page: number) => {
+    let perPage = 5;
+    if (page <= 0) return [];
+
+    const posts = prisma.post.findMany({
+        where: { 
+            status: "PUBLISHED" 
+        },
+        include: {
+            author: {
+                select: {
+                    name: true
+                }
+            },
+        },
+        orderBy: {
+            createdAt: "desc"
+        },
+        take: perPage,
+        skip: (page - 1) * perPage
+    })
+
+    return posts;
+}
+
 export const getAllPosts = async (page: number) => {
     let perPage = 5;
     if (page <= 0) return [];
