@@ -8,7 +8,7 @@ mainRouter.get("/ping", (req, res) => {
 })
 
 mainRouter.get("/posts", mainController.getAllPosts);
-//mainRouter.get("/posts/:slug", mainController.getPosts);
+mainRouter.get("/posts/:slug", mainController.getPosts);
 //mainRouter.get("/posts/:slug/related", mainController.getRelatedPost);
 
 
