@@ -1,5 +1,5 @@
 import type { RequestHandler } from "express";
-import { getAllPublishedPosts, getPostBySlug } from "../services/posts";
+import { getAllPublishedPosts, getPostBySlug, getPostsWithSameTag } from "../services/posts";
 import { coverToUrl } from "../utils/cover-to-url";
 
 
@@ -51,5 +51,22 @@ export const getPosts: RequestHandler = async (req, res) => {
 }
 
 export const getRelatedPost: RequestHandler = async (req, res) => {
+    const { slug } = req.params;
 
+    if (typeof slug !== "string") return res.status(400).json({ error: "type slug invalid" })
+
+    let posts = await getPostsWithSameTag(slug);
+
+    const postsToReturn = posts.map(posts => ({
+        id: posts.id,
+        status: posts.status,
+        title: posts.title,
+        createdAt: posts.createdAt,
+        cover: coverToUrl(posts.cover),
+        authorName: posts.author?.name,
+        tags: posts.tags,
+        slug: posts.slug
+    }));
+
+    res.json({ posts: postsToReturn })
 }
